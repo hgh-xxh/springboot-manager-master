@@ -12,6 +12,8 @@ import org.springframework.core.env.Environment;
 import java.net.InetAddress;
 
 
+
+//更改后
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @MapperScan("com.company.project.mapper")
 @Slf4j
