@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/css/custom.form.css">
+</head>
+<body>
+
+
+
+
+<div class="panel panel-default operation" hidden>
+  <div class="panel-heading title"></div>
+<div class="layui-card-body">
+
+
+<form class="layui-form " action="" lay-filter="info" style="width: 700px;margin-top: 10px">
+      <input name="id" hidden/>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">出库id</label>
+      <div class="layui-input-block">
+<!--          <div>-->
+<!--              <input type="text" name="searchnum" placeholder="请输入搜索出库数量" autocomplete="off" class="layui-input">-->
+<!--              <button onclick="alert("a");"> 查找</button>-->
+<!--          </div>-->
+          <div id="storeioId" name="storeioId" class="xm-select-demo" ></div>
+          <input id="storeioId" name="storeioId"  hidden lay-verify="required"/>
+<!--        <input type="storeioId" name="storeioId" placeholder="请输入出库id" autocomplete="off" class="layui-input">-->
+<!--          <select id="storeioId" name="storeioId" lay-filter="storeioId" placeholder="请选择出库id" required  lay-verify="required">-->
+<!--              <option value=""></option>-->
+<!--          </select>-->
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">经销商id</label>
+        <div class="layui-input-block">
+            <div id="shopId" name="shopId" class="xm-select-demo" ></div>
+            <input id="shopId" name="shopId" hidden lay-verify="required"/>
+        </div>
+
+<!--        <div class="layui-input-block">-->
+<!--            <select id="shopId" name="shopId" lay-filter="shopId" placeholder="请选择经销商id" required  lay-verify="required">-->
+<!--                <option value=""></option>-->
+<!--            </select>-->
+<!--        </div>-->
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">发货商</label>
+      <div class="layui-input-block">
+        <input type="orderOffer" name="orderOffer" placeholder="请输入发货商" autocomplete="off" class="layui-input" lay-verify="required">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">发货商联系方式</label>
+      <div class="layui-input-block">
+        <input type="orderOfferphone" name="orderOfferphone" placeholder="请输入发货商联系方式" autocomplete="off" class="layui-input" lay-verify="required">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">产品id</label>
+      <div class="layui-input-block">
+          <select id="orderProductid" name="orderProductid" lay-filter="shopId" placeholder="请选择产品id" required  lay-verify="required">
+              <option value=""></option>
+          </select>
+<!--        <input type="orderProductid" name="orderProductid" placeholder="请输入产品id" autocomplete="off" class="layui-input">-->
+      </div>
+
+    </div>
+<!--    <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">订单产品数量</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="orderNumber" name="orderNumber" placeholder="请输入订单产品数量" autocomplete="off" class="layui-input">-->
+
+<!--      </div>-->
+<!--    </div>-->
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">订单状态</label>
+      <div class="layui-input-block">
+          <select id="orderState" name="orderState" lay-filter="categoryId" placeholder="请选择订单状态" required  lay-verify="required">
+              <option value="发货中">发货中</option>
+              <option value="运输中">运输中</option>
+              <option value="收货完成">收货完成</option>
+              <option value="订单结束">订单结束</option>
+          </select>
+<!--          <input type="orderState" name="orderState" placeholder="请输入订单状态" autocomplete="off" class="layui-input">-->
+      </div>
+    </div>
+
+        <div class="layui-form-item">
+      <label class="layui-form-label">订单补充描述</label>
+      <div class="layui-input-block">
+        <input type="orderDesc" name="orderDesc" placeholder="请输入订单补充描述" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+  <div class="layui-form-item">
+  <div class="layui-input-block">
+    <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
+    <button  class="layui-btn layui-btn-primary" id="btn_cancel">返回</button>
+  </div>
+</div>
+</form>
+</div>
+</div>
+
+<div class="table_div">
+  <div id="searchParam"  shiro:hasPermission="sysOrder:list">
+    <div class="layui-form-item">
+      <div class="layui-input-inline">
+        <input type="text" id="storeName" class="layui-input"  autocomplete="off" placeholder="请输入仓库名称">
+      </div>
+        <div class="layui-input-inline">
+            <input type="text" id="orderProductName" class="layui-input"  autocomplete="off" placeholder="请输入商品名称">
+        </div>
+<!--        <div class="layui-input-inline">-->
+<!--            <input type="text" id="orderReceivename" class="layui-input"  autocomplete="off" placeholder="请输入经销商名称">-->
+<!--        </div>-->
+
+
+
+      <div class="layui-input-inline ">
+        <button class="layui-btn" onclick="search()"  id="search">查询</button>
+        <button class="layui-btn"   id="export">导出全部</button>
+      </div>
+    </div>
+
+  </div>
+  <table class="layui-table" id="showTable" lay-filter="showTable" ></table>
+</div>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="add"  shiro:hasPermission="sysOrder:add">添加</button>
+    <button class="layui-btn layui-btn-sm" lay-event="batchDeleted" shiro:hasPermission="sysOrder:delete">删除</button>
+  </div>
+</script>
+<!--<a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="sysOrder:update">编辑</a>-->
+<script type="text/html" id="tool">
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="sysOrder:delete">删除</a>
+</script>
+
+</body>
+</html>
+<script src="/layui/layui.all.js"></script>
+<script src="/js/xm-select.js"></script>
+<script src="/js/core.util.js"></script>
+<script>
+
+  //获取token
+  var token = CoreUtil.getData("access_token");
+  //地址栏转义token中的#号
+  var tokenQuery = token.replace("#", "%23");
+  var tableIns1;
+  var table = layui.table;
+  var form = layui.form;
+  var layer = layui.layer;
+  var $ = jQuery = layui.jquery;
+  var laydate = layui.laydate;
+
+  layui.use(['table', 'layer', 'laydate'], function () {
+      init1();
+      init2();
+      init3();
+    //加载table
+    tableIns1 = table.render({
+      elem: '#showTable'
+      , contentType: 'application/json'
+      , headers: {"authorization": token}
+      , page: true //开启分页
+      , url: '/sysOrder/listByPage' //数据接口
+      , method: 'POST'
+      , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+        return {
+          "code": res.code, //解析接口状态
+          "msg": res.msg, //解析提示文本
+          "count": CoreUtil.isEmpty(res.data) ? 0 : res.data.total, //解析数据长度
+          "data": CoreUtil.isEmpty(res.data) ? null : res.data.records //解析数据列表
+        }
+      }
+        ,cellMinWidth: 150
+        , cols: [
+        [
+          {type: 'checkbox', fixed: 'left'},
+         // {field: 'transferId', title: '物流id', sort: true},
+            // {field: 'storeioId', title: '出库id', sort: true},
+           {field: 'storeName', title: '仓库名称', sort: true},
+         // {field: 'shopId', title: '经销商id', sort: true},
+          {field: 'orderOffer', title: '发货商', sort: true},
+          {field: 'orderOfferphone', title: '发货商联系方式', sort: true},
+          {field: 'orderReceivename', title: '经销商名称', sort: true},
+          {field: 'orderReceivephone', title: '经销商电话', sort: true},
+          {field: 'orderReceiveadress', title: '收货地址', sort: true},
+          //{field: 'orderProductid', title: '产品id', sort: true},
+          {field: 'orderProductName', title: '产品名称', sort: true},
+          {field: 'orderNumber', title: '订单产品数量', sort: true},
+          {field: 'orderPrice', title: '订单总价', sort: true},
+          {field: 'orderState', title: '订单状态', sort: true},
+          {field: 'orderTime', title: '订单时间', sort: true},
+          {field: 'orderDesc', title: '订单补充描述', sort: true},
+          {width: 120, toolbar: "#tool", title: '操作'}
+        ]
+      ]
+      , toolbar: '#toolbar'
+    });
+
+
+    //表头工具
+    table.on('toolbar(showTable)', function(obj){
+      switch(obj.event){
+        case 'batchDeleted':
+          var checkStatus = table.checkStatus(obj.config.id);
+          var data = checkStatus.data;
+          if(data.length==0){
+            layer.msg("请选择要批量删除的列");
+          }else {
+            var ids = [];
+            $(data).each(function (index,item) {
+              ids.push(item.id);
+            });
+            tipDialog(ids);
+          }
+          break;
+        case 'add':
+
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("新增");
+          $(".operation input[name=id]").val("");
+          $(".operation input[name=transferId]").val("");
+          $(".operation input[name=storeioId]").val("");
+          $(".operation input[name=shopId]").val("");
+          $(".operation input[name=orderOffer]").val("");
+          $(".operation input[name=orderOfferphone]").val("");
+          $(".operation input[name=orderReceivename]").val("");
+          $(".operation input[name=orderReceivephone]").val("");
+          $(".operation input[name=orderReceiveadress]").val("");
+          $(".operation input[name=orderProductid]").val("");
+          $(".operation input[name=orderNumber]").val("");
+          $(".operation input[name=orderPrice]").val("");
+          $(".operation input[name=orderState]").val("");
+          $(".operation input[name=orderTime]").val("");
+          $(".operation input[name=orderDesc]").val("");
+          break;
+      };
+    });
+    //列操作
+    table.on('tool(showTable)',function (obj) {
+      var data = obj.data;
+      switch (obj.event) {
+        case 'del':
+          var ids=[];
+          ids.push(data.id);
+          tipDialog(ids);
+          break;
+        case 'edit':
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("编辑");
+          $(".operation input[name=id]").val(data.id);
+          $(".operation input[name=orderOffer]").val(data.orderOffer);
+          $(".operation input[name=orderOfferphone]").val(data.orderOfferphone);
+          $(".operation input[name=orderReceivename]").val(data.orderReceivename);
+          $(".operation input[name=orderReceivephone]").val(data.orderReceivephone);
+          $(".operation input[name=orderReceiveadress]").val(data.orderReceiveadress);
+          $(".operation input[name=orderDesc]").val(data.orderDesc);
+          $(".operation input").attr("disabled","disabled");
+          $(".operation select").hide();
+          break;
+      }
+    });
+
+    //导出
+    $('#export').on('click', function () {
+      //原先分页limit
+      var exportParams = {
+        limit: 10000,
+        key: $("#key").val()
+      };
+      CoreUtil.sendPost("/sysOrder/listByPage", exportParams, function (res) {
+        //初始化渲染数据
+        if (res.data != null && res.data.records != null) {
+          table.exportFile(tableIns1.config.id, res.data.records, 'xls');
+        }
+      });
+    });
+
+    //删除
+    var tipDialog=function (ids) {
+      layer.open({
+        content: "确定要删除么?",
+        yes: function(index, layero){
+          layer.close(index); //如果设定了yes回调，需进行手工关闭
+          CoreUtil.sendDelete("/sysOrder/delete",ids,function (res) {
+            layer.msg(res.msg, {time:1000},function () {
+              search();
+            });
+          });
+        }
+      });
+    };
+
+    //返回
+    $("#btn_cancel").click(function() {
+      $(".table_div").show();
+      $(".operation").hide();
+      return false;
+    });
+
+    //监听保存
+    form.on('submit(submit)', function(data){
+        var mobile = data.field.orderOfferphone;
+        var isMob= /^0?1[3|4|5|8][0-9]\d{8}$/;// 座机格式 区号之后用'-'隔开
+        var isPhone = /^1[34578]\d{9}$/;//手机号码
+        var reg=/^[0-9]+.?[0-9]*$/;
+        if(!(isMob.test(mobile)||isPhone.test(mobile))){//手机号码
+            layer.msg("请输入正确联系方式");
+            return false;
+        }
+        // if(!reg.test(data.field.orderNumber)){
+        //     layer.msg("请输入正确数字");
+        //     return false;
+        // }
+      if(data.field.id===undefined || data.field.id===null || data.field.id===""){
+          //alert($(".storeioId").val()) ;
+          console.log(data.field);
+         CoreUtil.sendPost("/sysOrder/add",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+          search();
+        });
+      }else {
+        CoreUtil.sendPut("/sysOrder/update",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+
+          search();
+        });
+      }
+
+      return false;
+    });
+  });
+
+  //执行查询
+  function search() {
+    //这里以搜索为例
+    tableIns1.reload({
+        url:'/sysOrder/search',
+      where: { //设定异步数据接口的额外参数，任意设
+          storeName: $("#storeName").val(),
+          orderProductName: $("#orderProductName").val()
+      }
+      , page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  };
+  function init1(){
+      CoreUtil.sendGet("/sysOrder/init1", null, function (res) {
+          //console.log(res);
+          var a=[];
+          for(var i in res.data){
+              a.push({name: res.data[i].storeioId+" (仓库名称:"+res.data[i].storeName+"  | |产品名称:"+res.data[i].storeProductName+"  | |出库数量:"+res.data[i].storeioNum+")", value:res.data[i].storeioId});
+              // var a="<option value='"+res.data[i].categoryId+"'>"+res.data[i].categoryName+"</option>";
+              // console.log(a);
+              //$("#storeioId").append(new Option( res.data[i].storeioId+" (仓库名称:"+res.data[i].storeName+"  | |产品名称:"+res.data[i].storeProductName+"  | |出库数量:"+res.data[i].storeioNum+")",res.data[i].storeioId));
+          }
+          var demo1 = xmSelect.render({
+              el: '#storeioId',
+              radio: true,
+              toolbar: {show: true},
+              clickClose: true,
+              filterable: true,
+              data: a,
+              on: function(data){
+                  //arr:  当前多选已选中的数据
+                  var arr = data.arr;
+                  //change, 此次选择变化的数据,数组
+                  var change = data.change;
+                  //isAdd, 此次操作是新增还是删除
+                  var isAdd = data.isAdd;
+                  $(".operation input[name=storeioId]").val(data.arr[0].value);
+                  //alert($(".operation input[name=storeioId]").val());
+              },
+          });
+          //console.log(a);
+          layui.form.render("select");
+          // loadLeftTree(res.data);
+          // loadDeptTree(res.data);
+      });
+  }
+  function init2(){
+      CoreUtil.sendGet("/sysOrder/init2", null, function (res) {
+          //console.log(res);
+          var a=[];
+          for(var i in res.data){
+              a.push({name: res.data[i].shopId+" (商店名称:"+res.data[i].shopName+")", value:res.data[i].shopId});
+              // var a="<option value='"+res.data[i].categoryId+"'>"+res.data[i].categoryName+"</option>";
+              // console.log(a);
+              //$("#storeioId").append(new Option( res.data[i].storeioId+" (仓库名称:"+res.data[i].storeName+"  | |产品名称:"+res.data[i].storeProductName+"  | |出库数量:"+res.data[i].storeioNum+")",res.data[i].storeioId));
+          }
+          var demo2 = xmSelect.render({
+              el: '#shopId',
+              radio: true,
+              toolbar: {show: true},
+              clickClose: true,
+              filterable: true,
+              data: a,
+              on: function(data){
+                  //arr:  当前多选已选中的数据
+                  var arr = data.arr;
+                  //change, 此次选择变化的数据,数组
+                  var change = data.change;
+                  //isAdd, 此次操作是新增还是删除
+                  var isAdd = data.isAdd;
+                  $(".operation input[name=shopId]").val(data.arr[0].value);
+                 // alert('已有: '+arr.length+' 变化: '+change.length+', 状态: ' + isAdd)
+              }
+          });
+          //console.log(a);
+          layui.form.render("select");
+      });
+  }
+  function init3(){
+      CoreUtil.sendGet("/sysOrder/init3", null, function (res) {
+          console.log(res);
+
+          for(var i in res.data){
+              // var a="<option value='"+res.data[i].categoryId+"'>"+res.data[i].categoryName+"</option>";
+              // console.log(a);
+              $("#orderProductid").append(new Option( res.data[i].productId+"("+res.data[i].productName+")",res.data[i].productId));
+          }
+          layui.form.render("select");
+
+      });
+  }
+</script>

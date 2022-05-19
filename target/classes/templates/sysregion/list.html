@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/css/custom.form.css">
+</head>
+<body>
+<div class="panel panel-default operation" hidden>
+  <div class="panel-heading title"></div>
+<div class="layui-card-body">
+<form class="layui-form " action="" lay-filter="info" style="width: 700px;margin-top: 10px">
+      <input name="id" hidden/>
+        <div class="layui-form-item">
+      <label class="layui-form-label">种植地区名称</label>
+      <div class="layui-input-block">
+        <input type="regionName" name="regionName" placeholder="请输入种植地区名称" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">地区位置</label>
+      <div class="layui-input-block">
+        <input type="regionAddress" name="regionAddress" placeholder="请输入地区位置" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">地区描述</label>
+      <div class="layui-input-block">
+        <input type="regionDescribe" name="regionDescribe" placeholder="请输入地区描述" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">种植农作物数量</label>
+      <div class="layui-input-block">
+        <input type="regionNum" name="regionNum" placeholder="请输入种植农作物数量" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">年平均气温</label>
+      <div class="layui-input-block">
+        <input type="regionAvgt" name="regionAvgt" placeholder="请输入年平均气温" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">昼夜温差</label>
+      <div class="layui-input-block">
+        <input type="regionDift" name="regionDift" placeholder="请输入昼夜温差" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">年降雨量</label>
+      <div class="layui-input-block">
+        <input type="regionRain" name="regionRain" placeholder="请输入年降雨量" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+  <div class="layui-form-item">
+  <div class="layui-input-block">
+    <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
+    <button  class="layui-btn layui-btn-primary" id="btn_cancel">返回</button>
+  </div>
+</div>
+</form>
+</div>
+</div>
+
+<div class="table_div">
+  <div id="searchParam"  shiro:hasPermission="sysRegion:list">
+    <div class="layui-form-item">
+      <div class="layui-input-inline">
+        <input type="text" id="regionName" class="layui-input"  autocomplete="off" placeholder="请输入地区名称">
+      </div>
+
+      <div class="layui-input-inline ">
+        <button class="layui-btn" onclick="search()"  id="search">查询</button>
+        <button class="layui-btn"   id="export">导出全部</button>
+      </div>
+    </div>
+
+  </div>
+  <table class="layui-table" id="showTable" lay-filter="showTable" ></table>
+</div>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="add"  shiro:hasPermission="sysRegion:add">添加</button>
+    <button class="layui-btn layui-btn-sm" lay-event="batchDeleted" shiro:hasPermission="sysRegion:delete">删除</button>
+  </div>
+</script>
+<script type="text/html" id="tool">
+  <a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="sysRegion:update">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="sysRegion:delete">删除</a>
+</script>
+
+</body>
+</html>
+<script src="/layui/layui.all.js"></script>
+<script src="/js/core.util.js"></script>
+<script>
+  //获取token
+  var token = CoreUtil.getData("access_token");
+  //地址栏转义token中的#号
+  var tokenQuery = token.replace("#", "%23");
+  var tableIns1;
+  var table = layui.table;
+  var form = layui.form;
+  var layer = layui.layer;
+  var $ = jQuery = layui.jquery;
+  var laydate = layui.laydate;
+
+  layui.use(['table', 'layer', 'laydate'], function () {
+
+    //加载table
+    tableIns1 = table.render({
+      elem: '#showTable'
+      , contentType: 'application/json'
+      , headers: {"authorization": token}
+      , page: true //开启分页
+      , url: '/sysRegion/listByPage' //数据接口
+      , method: 'POST'
+      , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+        return {
+          "code": res.code, //解析接口状态
+          "msg": res.msg, //解析提示文本
+          "count": CoreUtil.isEmpty(res.data) ? 0 : res.data.total, //解析数据长度
+          "data": CoreUtil.isEmpty(res.data) ? null : res.data.records //解析数据列表
+        }
+      }
+      , cols: [
+        [
+          {type: 'checkbox', fixed: 'left'},
+          {field: 'id', title: '种植地区id', sort: true},
+          {field: 'regionName', title: '种植地区名称', sort: true},
+          {field: 'regionAddress', title: '地区位置', sort: true},
+          {field: 'regionDescribe', title: '地区描述', sort: true},
+          {field: 'regionNum', title: '种植农作物数量', sort: true},
+          {field: 'regionAvgt', title: '年平均气温', sort: true},
+          {field: 'regionDift', title: '昼夜温差', sort: true},
+          {field: 'regionRain', title: '年降雨量', sort: true},
+          {width: 120, toolbar: "#tool", title: '操作'}
+        ]
+      ]
+      , toolbar: '#toolbar'
+    });
+
+
+    //表头工具
+    table.on('toolbar(showTable)', function(obj){
+      switch(obj.event){
+        case 'batchDeleted':
+          var checkStatus = table.checkStatus(obj.config.id);
+          var data = checkStatus.data;
+          if(data.length==0){
+            layer.msg("请选择要批量删除的列");
+          }else {
+            var ids = [];
+            $(data).each(function (index,item) {
+              ids.push(item.id);
+            });
+            tipDialog(ids);
+          }
+          break;
+        case 'add':
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("新增");
+          $(".operation input[name=id]").val("");
+          $(".operation input[name=regionName]").val("");
+          $(".operation input[name=regionAddress]").val("");
+          $(".operation input[name=regionDescribe]").val("");
+          $(".operation input[name=regionNum]").val("");
+          $(".operation input[name=regionAvgt]").val("");
+          $(".operation input[name=regionDift]").val("");
+          $(".operation input[name=regionRain]").val("");
+          break;
+      };
+    });
+    //列操作
+    table.on('tool(showTable)',function (obj) {
+      var data = obj.data;
+      switch (obj.event) {
+        case 'del':
+          var ids=[];
+          ids.push(data.id);
+          tipDialog(ids);
+          break;
+        case 'edit':
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("编辑");
+          $(".operation input[name=id]").val(data.id);
+          $(".operation input[name=regionName]").val(data.regionName);
+          $(".operation input[name=regionAddress]").val(data.regionAddress);
+          $(".operation input[name=regionDescribe]").val(data.regionDescribe);
+          $(".operation input[name=regionNum]").val(data.regionNum);
+          $(".operation input[name=regionAvgt]").val(data.regionAvgt);
+          $(".operation input[name=regionDift]").val(data.regionDift);
+          $(".operation input[name=regionRain]").val(data.regionRain);
+          break;
+      }
+    });
+
+    //导出
+    $('#export').on('click', function () {
+      //原先分页limit
+      var exportParams = {
+        limit: 10000,
+        key: $("#key").val()
+      };
+      CoreUtil.sendPost("/sysRegion/listByPage", exportParams, function (res) {
+        //初始化渲染数据
+        if (res.data != null && res.data.records != null) {
+          table.exportFile(tableIns1.config.id, res.data.records, 'xls');
+        }
+      });
+    });
+
+    //删除
+    var tipDialog=function (ids) {
+      layer.open({
+        content: "确定要删除么?",
+        yes: function(index, layero){
+          layer.close(index); //如果设定了yes回调，需进行手工关闭
+          CoreUtil.sendDelete("/sysRegion/delete",ids,function (res) {
+            layer.msg(res.msg, {time:1000},function () {
+              search();
+            });
+          });
+        }
+      });
+    };
+
+    //返回
+    $("#btn_cancel").click(function() {
+      $(".table_div").show();
+      $(".operation").hide();
+      return false;
+    });
+
+    //监听保存
+    form.on('submit(submit)', function(data){
+      if(data.field.id===undefined || data.field.id===null || data.field.id===""){
+        CoreUtil.sendPost("/sysRegion/add",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+          search();
+        });
+      }else {
+        CoreUtil.sendPut("/sysRegion/update",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+          search();
+        });
+      }
+
+      return false;
+    });
+  });
+
+  //执行查询
+  function search() {
+    //这里以搜索为例
+    tableIns1.reload({
+      where: { //设定异步数据接口的额外参数，任意设
+          regionName: $("#regionName").val()
+      }
+      , page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  };
+</script>

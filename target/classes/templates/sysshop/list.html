@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/css/custom.form.css">
+
+</head>
+<body>
+<div class="panel panel-default operation" hidden>
+  <div class="panel-heading title"></div>
+<div class="layui-card-body">
+<form class="layui-form " action="" lay-filter="info" style="width: 700px;margin-top: 10px">
+      <input name="shopId" hidden/>
+        <div class="layui-form-item">
+      <label class="layui-form-label">商店名称</label>
+      <div class="layui-input-block">
+        <input required  lay-verify="required" type="shopName" name="shopName" placeholder="请输入商店名称" autocomplete="off" class="layui-input" >
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">管理人</label>
+      <div class="layui-input-block">
+        <input required  lay-verify="required"  type="shopPeople" name="shopPeople" placeholder="请输入管理人" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">手机号</label>
+      <div class="layui-input-block">
+        <input required  lay-verify="required" type="shopPhone" name="shopPhone" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">省/市/县</label>
+        <div id="cc" >
+            <div class="layui-input-inline" style="width: 120px;">
+                <select id="province" name="shopProvince" lay-filter="province" >
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 120px;">
+                <select id="city" name="shopCity" lay-filter="city" >
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 120px;">
+                <select id="area" name="shopCounty"  lay-filter="area" >
+                </select>
+            </div>
+        </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">详细地址</label>
+      <div class="layui-input-block">
+        <input required  lay-verify="required" type="shopAddress" name="shopAddress" placeholder="请输入地址" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="shopStatus" lay-skin="switch" lay-filter="switch" lay-text="启用|禁用" checked>
+        </div>
+    </div>
+
+        <div class="layui-form-item">
+      <label class="layui-form-label">描述</label>
+      <div class="layui-input-block">
+        <input type="shopDesc" name="shopDesc" placeholder="请输入描述" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+  <div class="layui-form-item">
+  <div class="layui-input-block">
+    <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
+    <button  class="layui-btn layui-btn-primary" id="btn_cancel">返回</button>
+  </div>
+</div>
+</form>
+</div>
+</div>
+
+<div class="table_div">
+  <div id="searchParam"  shiro:hasPermission="sys:user:list">
+
+      <div id="searchParam" >
+          <div class="layui-form-item">
+              <div class="layui-input-inline">
+                  <input type="text" id="shopName" class="layui-input" autocomplete="off" placeholder="请输入商店名称">
+              </div>
+              <div class="layui-input-inline">
+                  <input type="text" id="shopPeople" class="layui-input" autocomplete="off" placeholder="请输入管理人姓名">
+              </div>
+              <div class="layui-input-inline">
+                  <input type="text" id="shopPhone" class="layui-input" autocomplete="off" placeholder="请输入手机号">
+              </div>
+              <div class="layui-input-inline layui-form">
+                  <select id="shopStatus">
+                      <option value="">请选择账号状态</option>
+                      <option value="1">正常</option>
+                      <option value="2">禁用</option>
+                  </select>
+              </div>
+              <div class="layui-input-inline ">
+                  <button class="layui-btn" onclick="search()" id="search">查询</button>
+              </div>
+
+          </div>
+
+      </div>
+  </div>
+  <table class="layui-table" id="showTable" lay-filter="showTable" ></table>
+</div>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="add"  shiro:hasPermission="sysShop:add">添加</button>
+    <button class="layui-btn layui-btn-sm" lay-event="batchDeleted" shiro:hasPermission="sysShop:delete">删除</button>
+      <button class="layui-btn layui-btn-sm"   id="export">导出全部</button>
+  </div>
+</script>
+<script type="text/html" id="tool">
+  <a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="sysShop:update">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="sysShop:delete">删除</a>
+</script>
+
+</body>
+</html>
+<script src="/layui/layui.all.js"></script>
+
+<script src="/js/core.util.js"></script>
+<script src=" https://markchen7788.github.io/addressSelect/adress.js"> </script>
+
+<script>
+  //获取token
+  var token = CoreUtil.getData("access_token");
+  //地址栏转义token中的#号
+  var tokenQuery = token.replace("#", "%23");
+  var tableIns1;
+  var table = layui.table;
+  var form = layui.form;
+  var layer = layui.layer;
+  var $ = jQuery = layui.jquery;
+  var laydate = layui.laydate;
+
+  layui.use(['table', 'layer', 'laydate'], function () {
+
+    //加载table
+    tableIns1 = table.render({
+      elem: '#showTable'
+      , contentType: 'application/json'
+      , headers: {"authorization": token}
+      , page: true //开启分页
+      , url: '/sysShop/listByPage' //数据接口
+      , method: 'POST'
+      , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+        return {
+          "code": res.code, //解析接口状态
+          "msg": res.msg, //解析提示文本
+          "count": CoreUtil.isEmpty(res.data) ? 0 : res.data.total, //解析数据长度
+          "data": CoreUtil.isEmpty(res.data) ? null : res.data.records //解析数据列表
+        }
+      }
+      , cols: [
+        [
+          {type: 'checkbox', fixed: 'left'},
+          {field: 'shopId', title: '经销商Id', sort: true},
+          {field: 'shopName', title: '商店名称', sort: true},
+          {field: 'shopPeople', title: '管理人', sort: true},
+          {field: 'shopPhone', title: '手机号', sort: true},
+          {field: 'shopProvince', title: '省', sort: true},
+          {field: 'shopCity', title: '市', sort: true},
+          {field: 'shopCounty', title: '县', sort: true},
+          {field: 'shopAddress', title: '地址', sort: true},
+            // {
+            //     field: 'shopStatus', title: '状态', width: 100, templet: function (item) {
+            //         if (item.shopStatus === "1") {
+            //             return '  <input type="checkbox" lay-skin="switch" lay-text="正常|禁用" checked disabled>';
+            //         }
+            //         if (item.shopStatus === "2") {
+            //             return '  <input type="checkbox" lay-skin="switch" lay-text="正常|禁用" disabled>';
+            //         }
+            //     }
+            // },
+          // {field: 'shopStatus', title: '状态', sort: true},
+          {field: 'shopDesc', title: '描述', sort: true},
+          {width: 120, toolbar: "#tool", title: '操作'}
+        ]
+      ]
+      , toolbar: '#toolbar'
+    });
+
+
+    //表头工具
+    table.on('toolbar(showTable)', function(obj){
+      switch(obj.event){
+        case 'batchDeleted':
+          var checkStatus = table.checkStatus(obj.config.id);
+          var data = checkStatus.data;
+          if(data.length==0){
+            layer.msg("请选择要批量删除的列");
+          }else {
+            var ids = [];
+            $(data).each(function (index,item) {
+              ids.push(item.shopId);
+            });
+            tipDialog(ids);
+          }
+          break;
+        case 'add':
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("新增");
+          $(".operation input[name=shopId]").val("");
+          $(".operation input[name=shopName]").val("");
+          $(".operation input[name=shopPeople]").val("");
+          $(".operation input[name=shopPhone]").val("");
+          $(".operation input[name=shopProvince]").val("");
+          $(".operation input[name=shopCity]").val("");
+          $(".operation input[name=shopCounty]").val("");
+          $(".operation input[name=shopAddress]").val("");
+          $(".operation input[name=shopDesc]").val("");
+          form.render(); //更新全部
+          break;
+      };
+    });
+    //列操作
+    table.on('tool(showTable)',function (obj) {
+      var data = obj.data;
+      switch (obj.event) {
+        case 'del':
+          var ids=[];
+          ids.push(data.shopId);
+          tipDialog(ids);
+          break;
+        case 'edit':
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("编辑");
+          $(".operation input[name=shopId]").val(data.shopId);
+          $(".operation input[name=shopName]").val(data.shopName);
+          $(".operation input[name=shopPeople]").val(data.shopPeople);
+          $(".operation input[name=shopPhone]").val(data.shopPhone);
+          $(".operation input[name=shopProvince]").val(data.shopProvince);
+          $(".operation input[name=shopCity]").val(data.shopCity);
+          $(".operation input[name=shopCounty]").val(data.shopCounty);
+          $(".operation input[name=shopAddress]").val(data.shopAddress);
+
+          $(".operation input[name=shopDesc]").val(data.shopDesc);
+          break;
+      }
+    });
+
+    //导出
+    $('#export').on('click', function () {
+
+      //原先分页limit
+      var exportParams = {
+        limit: 10000,
+        key: $("#key").val()
+      };
+      CoreUtil.sendPost("/sysShop/listByPage", exportParams, function (res) {
+        //初始化渲染数据
+        if (res.data != null && res.data.records != null) {
+          table.exportFile(tableIns1.config.id, res.data.records, 'xls');
+        }
+      });
+    });
+
+    //删除
+    var tipDialog=function (ids) {
+      layer.open({
+        content: "确定要删除么?",
+        yes: function(index, layero){
+          layer.close(index); //如果设定了yes回调，需进行手工关闭
+          CoreUtil.sendDelete("/sysShop/delete",ids,function (res) {
+            layer.msg(res.msg, {time:1000},function () {
+              search();
+            });
+          });
+        }
+      });
+    };
+
+    //返回
+    $("#btn_cancel").click(function() {
+      $(".table_div").show();
+      $(".operation").hide();
+      return false;
+    });
+      form.on('switch(switch)', function () {
+          $(".operation input[name=shopStatus]").attr('type', 'hidden').val(this.checked ? 1 : 2);
+
+      });
+    //监听保存
+    form.on('submit(submit)', function(data){
+        var mobile = data.field.shopPhone;
+        var isMob= /^0?1[3|4|5|8][0-9]\d{8}$/;// 座机格式 区号之后用'-'隔开
+        var isPhone = /^1[34578]\d{9}$/;//手机号码
+        if(!(isMob.test(mobile)||isPhone.test(mobile))){//手机号码
+            layer.msg("请输入正确联系方式");
+            return false;
+        }
+      if(data.field.shopId===undefined || data.field.shopId===null || data.field.shopId===""){
+        CoreUtil.sendPost("/sysShop/add",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+            refresh();
+        });
+      }else {
+        CoreUtil.sendPut("/sysShop/update",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+            refresh();
+        });
+      }
+
+      return false;
+    });
+  });
+
+  //执行查询
+  function search() {
+    tableIns1.reload({
+        url:'/sysShop/search',
+      where: { //设定异步数据接口的额外参数，任意设
+          shopName: $("#shopName").val(),
+          shopPeople:$("#shopPeople").val(),
+          shopPhone:$("#shopPhone").val(),
+          shopStatus:$("#shopStatus").val(),
+      }
+      , page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  };
+  //刷新
+  function refresh() {
+      //这里以搜索为例
+      tableIns1.reload({
+          where: { //设定异步数据接口的额外参数，任意设
+
+          }
+          , page: {
+              curr: 1 //重新从第 1 页开始
+          }
+      });
+  };
+</script>

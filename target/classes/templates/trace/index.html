@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>水果溯源</title>
+  <link rel="stylesheet" href="/css/trace/animate.css">
+  <link rel="stylesheet" href="/css/trace/layui.css">
+  <link rel="stylesheet" href="/js/trace/layui.js">
+</head>
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+  }
+
+  p {
+    letter-spacing: 0px
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  body {
+    font-family: Tahoma, Arial, Helvetica, "宋体";
+
+    text-align: center;
+    background: #FFF;
+    color: black;
+    max-width: 100%;
+    font-size: 11px;
+  }
+
+  .section_1 {
+    width: 100%;
+    /*background-image: url('/images/trace/bg-img-01.jpg');*/
+    background-size: 100% 110%;
+    background-attachment: fixed;
+  }
+
+  /* 手机 */
+  @media screen and (max-width:600px) {
+    .section_1 {
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .section_1 section {
+      max-width: 100%;
+      line-height: 1.5;
+      color: black;
+      z-index: 100
+    }
+
+    .section_1 section h1 {
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .btn {
+      margin: 0 auto
+    }
+
+    .navbar {
+
+      bottom: 5px;
+      left: 5px;
+      position: fixed;z-index: 999;
+    }
+
+
+    .btn {
+      margin-top: 30px;
+      display: block;
+      color: black;
+      line-height: 40px;
+      height: 40px;
+      width: 110px;
+      background-color: #DE7178;
+      border-radius: 5px
+    }
+
+    .section_2 section {
+      margin-left: 30px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 40%;
+      width: 70%;
+      background-color: rgba(255, 255, 255, 0.7)
+    }
+
+    .section_2 secction:last-of-type {
+      margin-top: 50px;
+      position: relative
+    }
+
+    .section_2 section .btn {
+      left: auto;
+      right: auto;
+      bottom: 20px;
+      position: absolute
+    }
+  }
+
+  /* 平板 pc */
+  @media screen and (min-width:600px) {
+    .section_1 {
+      position: relative
+    }
+
+    .section_1 section {
+      max-width: 330px;
+      line-height: 1.5;
+      color: black;
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      z-index: 100
+    }
+
+    .section_1 section h1 {
+      text-align: left;
+      font-size: 40px;
+      font-weight: 700;
+    }
+
+    P {
+      text-align: left;
+    }
+
+    .section_2 section {
+      margin-left: 30px;
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 400px;
+      width: 320px;
+      background-color: rgba(255, 255, 255, 0.7)
+    }
+
+    .btn {
+      margin-top: 30px;
+      display: block;
+      color: #fff;
+      line-height: 50px;
+      height: 50px;
+      width: 150px;
+      background-color: #DE7178;
+      border-radius: 5px
+    }
+
+    .navbar {
+      position: fixed;
+      bottom: 5px;
+      left: 5px;
+      z-index: 999;
+    }
+
+  }
+
+  .section_2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    /*background-image: url('/images/trace/bg-img-02.jpg');*/
+    background-size: 100% 110%;
+    background-attachment: fixed;
+    position: relative
+  }
+
+
+  .section_2 section .btn {
+    margin-top: 150px
+  }
+
+  .section_3 {
+    width: 100%;
+    /*background-image: url('/images/trace/bg-img-03.jpg');*/
+    background-size: 100% 110%;
+    background-attachment: fixed;
+    position: relative
+  }
+
+
+  .btn:hover {
+    background-color: #E8313D;
+  }
+
+
+  .navbar .show {
+    float: left;
+    background-color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100%;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.24s 0.2s;
+  }
+
+  .navbar .show:hover {
+    opacity: 0
+  }
+
+  .navbar .menu {
+    width: 20px;
+    margin: 0 auto;
+    line-height: 24px;
+    font-size: 20px;
+    list-style: none;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 1.4s 0.07s;
+    z-index: -1;
+  }
+
+  .navbar .menu li {
+    margin-left: 15px;
+    float: left;
+  }
+
+  .navbar .menu li a:hover {
+    cursor: pointer;
+    font-weight: 700;
+    color: black;
+  }
+
+  .navbar:hover .menu {
+    transition: transform 0.4s 0.08s, z-index 0s 0.5s;
+    transform: scale(1);
+    z-index: 1;
+  }
+</style>
+
+<body>
+
+
+<div class="layui-row" style="background-color: #1aa094; position: fixed;z-index: 999;bottom: 0px; width: 100%; font-size: 14px;font-weight: bold;">
+
+  <div class="layui-col-xs3 layui-col-md4">
+    <div class="grid-demo"><a href="#section-1" id='nav1' style="color: white;">产品信息</a></div>
+  </div>
+  <div class="layui-col-xs3 layui-col-md12">
+    <div class="grid-demo grid-demo-bg2"><a href="#section-2" id='nav2' style="color: white;">种植信息</a></div>
+  </div>
+  <div class="layui-col-xs3 layui-col-md4">
+    <div class="grid-demo"><a href="#section-3" id='nav3' style="color: white;">运输信息</a></div>
+  </div>
+  <div class="layui-col-xs3 layui-col-md12">
+    <div class="grid-demo grid-demo-bg2"><a href="#section-4" id='nav4' style="color: white;">经销商信息</a></div>
+  </div>
+
+</div>
+<!--  <nav class="navbar">-->
+<!--    <div class="show wow bounceInUp">导航</div>-->
+<!--    <ul class="menu">-->
+<!--      <li><a href="#section-1" id='nav1'>产品信息</a></li>-->
+<!--      <li><a href="#section-2" id='nav2'>种植信息</a></li>-->
+<!--      <li><a href="#section-3" id='nav3'>运输信息</a></li>-->
+<!--      <li><a href="#section-4" id='nav4'>经销商信息</a></li>-->
+<!--    </ul>-->
+<!--  </nav>-->
+  <div class="section_3 bg" id='section-1'  style="background-color: #FFFAFA;">
+    <section class="wow bounceInLeft" data-wow-delay='.3s'>
+      <h2 style="background-color: #1aa094;font-weight: bold;"><img  style="width: 22px;height: 22px;" src="/images/trace/产品信息.png"><span style="color: white;margin-left: 5px;">产品信息</span></h2>
+      <img style="margin-top: 1px; width: 100%;" id="productImage"  src="http://127.0.0.1:8080/files/20220411/df3059b2240f45a4a493fb630e8b370e.jpg" width="100px" height="200px">
+      <div style="text-align: left;margin-left: 25px;" >
+        <p style="margin-top:20px"><span style="font-size: 14px;font-weight: bold;">产品名称：</span ><span id="productName" style="color: #999999;font-weight: bold">砂糖橘</span></p>
+        <p style="margin-top:20px"><span style="font-size: 14px;font-weight: bold;">产品评价：</span ><span id="productRemark" style="color: #999999;font-weight: bold;line-height: 20px;">其含有丰富的维生素C、钙、纤维质、少量蛋白质、脂肪以及丰富的葡萄糖、果糖、蔗糖、苹果酸，枸椽酸、柠檬酸以及胡萝卜素、硫胺素，核黄素、尼克酸、抗坏血酸，以及钙、磷、镁、钠等人体必需的元素</span></p>
+        <p style="margin-top:20px"><span style="font-size: 14px;font-weight: bold;">产品口感：</span ><span id="productTaste" style="color: #999999;font-weight: bold">酸甜</span></p>
+        <p style="margin-top:20px"><span style="font-size: 14px;font-weight: bold;">产品标准号：</span ><span id="productStdNumber" style="color: #999999;font-weight: bold">GB/T 11565456</span></p>
+        <p style="margin-top:20px"><span style="font-size: 14px;font-weight: bold;">产品食用方法：</span ><span id="productFun" style="color: #999999;font-weight: bold">即食</span></p>
+        <p style="margin-top:20px"><span style="font-size: 14px;font-weight: bold;">产品储存方法：</span ><span id="productStorage" style="color: #999999;font-weight: bold">常温储存</span></p>
+<!--        <p style="margin-top:20px"><span style="font-size: 14px;font-weight: bold;">种植基地：</span ><span id="productImage" style="color: #999999;font-weight: bold">江西于都县采摘基地</span></p>-->
+<!--        <p style="margin-top:20px"><span style="font-size: 14px;font-weight: bold;">基地信息：</span ><span id="productImage" style="color: #999999;font-weight: bold;line-height: 20px;">该基地是中国工农红军长征出发地，地区人民勤劳朴实，种出来的水果酸甜适宜</span></p>-->
+      </div>
+      <div class="layui-row layui-col-space15" style="margin-top: 10px;">
+        <div class="layui-col-md6">
+          <div class="layui-panel">
+            <div style="padding: 30px ; font-size: 14px;font-weight: bold;text-align: left">
+              该产品位于<span id="regionName"></span>,该种植基地位于<span id="regionAddress"></span>
+              种植基地的
+              产品年产量为<span id="regionNum"></span>kg
+              日平均温度<span id="regionAvgt"></span>
+              昼夜温差为<span id="regionDift"></span>
+              年降雨量为<span id="regionRain"></span>
+            </div>
+          </div>
+        </div>
+        <div class="layui-col-md6">
+          <div class="layui-panel">
+            <div style="padding: 30px ; font-size: 14px;font-weight: bold;text-align: left" id="regionDescribe">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="section_3 bg" id='section-2' style="background-color: #FFFAFA;">
+    <section class="wow bounceInLeft" data-wow-delay='.3s'>
+
+      <h2 style="background-color: #1aa094;font-weight: bold;">
+        <img style="width: 22px;height: 22px;" src="/images/trace/时间线.png"><span style="color: white;margin-left: 5px;">种植时间线</span>
+      </h2>
+      <ul class="layui-timeline" style="color: black; margin-top: 20px; " id="linkinfo">
+<!--        <li class="layui-timeline-item">-->
+<!--          <i class="layui-icon layui-timeline-axis"></i>-->
+<!--          <div class="layui-timeline-content layui-text" style="text-align: left">-->
+<!--            <div class="layui-timeline-title">-->
+<!--              <span style="font-size: 14px;font-weight: bold;">阶段时期：</span>-->
+<!--              <span style="color: #5FB878; font-weight: bold">育苗期</span>-->
+<!--              <span style="font-size: 14px;font-weight: bold;">培育时间：</span>-->
+<!--              <span style="color: #d93f36;font-weight: bold">2022-04-01 </span> </div>-->
+<!--            <div class="layui-timeline-title" >-->
+<!--              <span style="font-size: 14px;font-weight: bold;">操作人员：</span >-->
+<!--              <span style="color: #999999;font-weight: bold">种植操作员1</span>-->
+<!--             </div>-->
+<!--            <div class="layui-timeline-title">-->
+<!--              <span style="font-size: 14px;font-weight: bold;">描述：</span >-->
+<!--              <span style="color: #999999;font-weight: bold">处理育苗工作</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </li>-->
+<!--        <li class="layui-timeline-item">-->
+<!--          <i class="layui-icon layui-timeline-axis"></i>-->
+<!--          <div class="layui-timeline-content layui-text" style="text-align: left">-->
+<!--            <div class="layui-timeline-title">-->
+<!--              <span style="font-size: 14px;font-weight: bold;">阶段时期：</span>-->
+<!--              <span style="color: #5FB878; font-weight: bold">开花期</span>-->
+<!--              <span style="font-size: 14px;font-weight: bold;">培育时间：</span>-->
+<!--              <span style="color: #d93f36;font-weight: bold">2022-04-02 </span> </div>-->
+<!--            <div class="layui-timeline-title" >-->
+<!--              <span style="font-size: 14px;font-weight: bold;">操作人员：</span >-->
+<!--              <span style="color: #999999;font-weight: bold">种植操作员1</span>-->
+<!--            </div>-->
+<!--            <div class="layui-timeline-title">-->
+<!--              <span style="font-size: 14px;font-weight: bold;">描述：</span >-->
+<!--              <span style="color: #999999;font-weight: bold">处理开花期工作</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </li>-->
+<!--        <li class="layui-timeline-item">-->
+<!--          <i class="layui-icon layui-timeline-axis"></i>-->
+<!--          <div class="layui-timeline-content layui-text" style="text-align: left">-->
+<!--            <div class="layui-timeline-title">-->
+<!--              <span style="font-size: 14px;font-weight: bold;">阶段时期：</span>-->
+<!--              <span style="color: #5FB878; font-weight: bold">落果期</span>-->
+<!--              <span style="font-size: 14px;font-weight: bold; ">培育时间：</span>-->
+<!--              <span style="color: #d93f36;font-weight: bold">2022-04-03 </span> </div>-->
+<!--            <div class="layui-timeline-title" >-->
+<!--              <span style="font-size: 14px;font-weight: bold;">操作人员：</span >-->
+<!--              <span style="color: #999999;font-weight: bold">种植操作员1</span>-->
+<!--            </div>-->
+<!--            <div class="layui-timeline-title">-->
+<!--              <span style="font-size: 14px;font-weight: bold;">描述：</span >-->
+<!--              <span style="color: #999999;font-weight: bold">处理落果期工作</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </li><li class="layui-timeline-item">-->
+<!--        <i class="layui-icon layui-timeline-axis"></i>-->
+<!--        <div class="layui-timeline-content layui-text" style="text-align: left">-->
+<!--          <div class="layui-timeline-title">-->
+<!--            <span style="font-size: 14px;font-weight: bold;">阶段时期：</span>-->
+<!--            <span style="color: #5FB878; font-weight: bold">稳果成熟期</span>-->
+<!--            <span style="font-size: 14px;font-weight: bold;">培育时间：</span>-->
+<!--            <span style="color: #d93f36;font-weight: bold">2022-04-04 </span> </div>-->
+<!--          <div class="layui-timeline-title" >-->
+<!--            <span style="font-size: 14px;font-weight: bold;">操作人员：</span >-->
+<!--            <span style="color: #999999;font-weight: bold">种植操作员1</span>-->
+<!--          </div>-->
+<!--          <div class="layui-timeline-title">-->
+<!--            <span style="font-size: 14px;font-weight: bold;">描述：</span >-->
+<!--            <span style="color: #999999;font-weight: bold">处理稳果成熟期工作</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </li><li class="layui-timeline-item">-->
+<!--        <i class="layui-icon layui-timeline-axis"></i>-->
+<!--        <div class="layui-timeline-content layui-text" style="text-align: left">-->
+<!--          <div class="layui-timeline-title">-->
+<!--            <span style="font-size: 14px;font-weight: bold;">阶段时期：</span>-->
+<!--            <span style="color: #5FB878; font-weight: bold">采摘期</span>-->
+<!--            <span style="font-size: 14px;font-weight: bold;">培育时间：</span>-->
+<!--            <span style="color: #d93f36;font-weight: bold">2022-04-05 </span> </div>-->
+<!--          <div class="layui-timeline-title" >-->
+<!--            <span style="font-size: 14px;font-weight: bold;">操作人员：</span >-->
+<!--            <span style="color: #999999;font-weight: bold">种植操作员1</span>-->
+<!--          </div>-->
+<!--          <div class="layui-timeline-title">-->
+<!--            <span style="font-size: 14px;font-weight: bold;">描述：</span >-->
+<!--            <span style="color: #999999;font-weight: bold">处理采摘期工作</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </li>-->
+
+      </ul>
+
+    </section>
+  </div>
+  <HR align=center width=300 color=#987cb9 SIZE=1>
+  <div class="section_3 bg" id='section-3' style="background-color: #FFFAFA;">
+    <section class="wow bounceInLeft" data-wow-delay='.3s'>
+      <h2 style="background-color: #1aa094;font-weight: bold;">
+        <img style="width: 22px;height: 22px;" src="/images/trace/运输信息.png"><span style="color: white;margin-left: 5px;">运输信息</span>
+      </h2>
+      <ul class="layui-timeline" style="color: black; width: 90%;" id="transferinfo">
+<!--        <li class="layui-timeline-item">-->
+<!--          <i class="layui-icon layui-timeline-axis"></i>-->
+<!--          <div class="layui-timeline-content layui-text" style="text-align: left">-->
+<!--            <div class="layui-timeline-title">-->
+<!--              <span style="font-size: 14px;font-weight: bold;">物流状态：</span>-->
+<!--              <span style="color: #5FB878; font-weight: bold">出库</span>-->
+<!--              <span style="font-size: 14px;font-weight: bold;">出库时间：</span>-->
+<!--              <span style="color: #d93f36;font-weight: bold">2022-04-01 </span> </div>-->
+<!--            <div class="layui-timeline-title" >-->
+<!--              <span style="font-size: 14px;font-weight: bold;">操作人员：</span >-->
+<!--              <span style="color: #999999;font-weight: bold">种植操作员1</span>-->
+<!--            </div>-->
+<!--            <div class="layui-timeline-title">-->
+<!--              <span style="font-size: 14px;font-weight: bold;">描述：</span >-->
+<!--              <span style="color: #999999;font-weight: bold">处理出库工作</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </li>-->
+
+
+      </ul>
+    </section>
+
+  </div>
+
+  <div class="section_3 bg" id='section-4' style="background-color: #FFFAFA;">
+    <section class="content2 wow flipInY" data-wow-delay='.5s'>
+      <h2 style="background-color: #1aa094;font-weight: bold;">
+        <img style="width: 22px;height: 22px;" src="/images/trace/电话.png"><span style="color: white;margin-left: 5px;">经销商信息</span>
+      </h2>
+<!--      <p style="margin-top:20px">经销商名称：砂糖橘</p>-->
+<!--      <p style="margin-top:20px">联系方式：其含有丰富的维生素C、钙、纤维质、少量蛋白质、脂肪以及丰富的葡萄糖、果糖、蔗糖、苹果酸，枸椽酸、柠檬酸以及胡萝卜素、硫胺素，核黄素、尼克酸、抗坏血酸，以及钙、磷、镁、钠等人体必需的元素，沙糖橘味甘酸、性温，具有理气化痰、润肺清肠、补血健脾等功效。</p>-->
+<!--      <p style="margin-top:20px">经销商地址：酸甜</p>-->
+<!--      <p style="margin-top:20px">举报电话：0371-1111111</p>-->
+      <div style="text-align: left;margin-left: 25px;">
+        <p style="margin-top:20px">
+          <span style="font-size: 14px;font-weight: bold;">经销商名称：</span >
+          <span style="color: #999999;font-weight: bold" id="shopName">a商店</span></p>
+        <p style="margin-top:20px">
+          <span style="font-size: 14px;font-weight: bold;">经销商等级：</span >
+          <span style="color: #999999;font-weight: bold" id="">一级经销商</span></p>
+        <p style="margin-top:20px">
+          <span style="font-size: 14px;font-weight: bold;">联系方式：</span >
+          <span style="color: #999999;font-weight: bold" id="shopPhone">15188588633</span></p>
+        <p style="margin-top:20px">
+          <span style="font-size: 14px;font-weight: bold;">经销商地址：</span >
+          <span style="color: #999999;font-weight: bold" id="shopAddress">河南省 信阳市 光山县</span></p>
+        <p style="margin-top:20px">
+          <span style="font-size: 14px;font-weight: bold;">经销商简介：</span >
+          <span style="color: #999999;font-weight: bold" id="shopDesc"></span></p>
+        <p style="margin-top:20px">
+          <span style="font-size: 14px;font-weight: bold;">举报电话：</span >
+          <span style="color: #999999;font-weight: bold">0371-1111111</span></p>
+
+
+      </div>
+    </section>
+  </div>
+</body>
+<script src="/js/trace/jquery.js"></script>
+<script src="/js/trace/wow.min.js"></script>
+<script>
+  window.onload = function () {
+    //var token = CoreUtil.getData("access_token");
+    //console.log("bb");
+    // CoreUtil.sendPost("/test/getOrderId",null,function (res) {
+    //   console.log(res);
+    // });
+    //获取id
+    $.ajax({
+      type: "GET",
+      url: "/test/getOrderId",
+      data: {},
+      // data: {username:$("#username").val(), content:$("#content").val()},
+      dataType: "json",
+      success: function(data){
+        //获取id后，获取溯源信息
+        $.ajax({
+          type: "GET",
+          url: "/test/getInfo",
+          data: {orderId:data.data},
+          // data: {username:$("#username").val(), content:$("#content").val()},
+          dataType: "json",
+          success: function(data){
+             console.log(data.data);
+             console.log(data.data[2][0].linkDesc.substr(0,2));
+             //产品信息
+            $('#productImage').attr("src",data.data[0].productImage);
+            $('#productName').text(data.data[0].productName);
+            $('#productRemark').text(data.data[0].productRemark);
+            $('#productTaste').text(data.data[0].productTaste);
+            $('#productStdNumber').text(data.data[0].productStdNumber);
+            $('#productFun').text(data.data[0].productFun);
+            $('#productStorage').text(data.data[0].productStorage);
+            $('#productName').text(data.data[0].productName);
+            //种植基地
+            $('#regionName').text(data.data[1].regionName);
+            $('#regionAddress').text(data.data[1].regionAddress);
+            $('#regionAvgt').text(data.data[1].regionAvgt);
+            $('#regionDift').text(data.data[1].regionDift);
+            $('#regionNum').text(data.data[1].regionNum);
+            $('#regionRain').text(data.data[1].regionRain);
+            $('#regionDescribe').text(data.data[1].regionDescribe);
+
+
+            //环节
+            for(var i in data.data[2]){
+
+             // a.push({name: res.data[i].id+" (经销商名称:"+res.data[i].orderReceivename+" || 订单产品:"+res.data[i].orderProductName+")", value:res.data[i].id});
+              // var a="<option value='"+res.data[i].categoryId+"'>"+res.data[i].categoryName+"</option>";
+              // console.log(a);
+              $("#linkinfo").append(
+                      "<li class=\"layui-timeline-item\">\n" +
+                      "          <i class=\"layui-icon layui-timeline-axis\"></i>\n" +
+                      "          <div class=\"layui-timeline-content layui-text\" style=\"text-align: left\">\n" +
+                      "            <div class=\"layui-timeline-title\">\n" +
+                      "              <span style=\"font-size: 14px;font-weight: bold;\">阶段时期：</span>\n" +
+                      "              <span style=\"color: #5FB878; font-weight: bold\">" +
+                      data.data[2][i].linkName +
+                      "</span>\n" +
+                      "              <span style=\"font-size: 14px;font-weight: bold;\">培育时间：</span>\n" +
+                      "              <span style=\"color: #d93f36;font-weight: bold\">" +
+                      data.data[2][i].linkDate.substr(0,10) +
+                      "</span> </div>\n" +
+                      "            <div class=\"layui-timeline-title\" >\n" +
+                      "              <span style=\"font-size: 14px;font-weight: bold;\">操作人员：</span >\n" +
+                      "              <span style=\"color: #999999;font-weight: bold\">" +
+                      data.data[2][i].linkOperater +
+                      "</span>\n" +
+                      "             </div>\n" +
+                      "            <div class=\"layui-timeline-title\">\n" +
+                      "              <span style=\"font-size: 14px;font-weight: bold;\">描述：</span >\n" +
+                      "              <span style=\"color: #999999;font-weight: bold\">" +
+                      data.data[2][i].linkDesc +
+                      "</span>\n" +
+                      "            </div>\n" +
+                      "          </div>\n" +
+                      "        </li>"
+              );
+            }
+
+            //物流信息
+            for(var i in data.data[3]){
+
+              // a.push({name: res.data[i].id+" (经销商名称:"+res.data[i].orderReceivename+" || 订单产品:"+res.data[i].orderProductName+")", value:res.data[i].id});
+              // var a="<option value='"+res.data[i].categoryId+"'>"+res.data[i].categoryName+"</option>";
+              // console.log(a);
+              $("#transferinfo").append(
+                      "<li class=\"layui-timeline-item\">\n" +
+                      "          <i class=\"layui-icon layui-timeline-axis\"></i>\n" +
+                      "          <div class=\"layui-timeline-content layui-text\" style=\"text-align: left\">\n" +
+                      "            <div class=\"layui-timeline-title\">\n" +
+                      "              <span style=\"font-size: 14px;font-weight: bold;\">物流状态：</span>\n" +
+                      "              <span style=\"color: #5FB878; font-weight: bold\">" +
+                      data.data[3][i].transferState +
+                      "</span>\n" +
+                      "              <span style=\"font-size: 14px;font-weight: bold;\">更新时间：</span>\n" +
+                      "              <span style=\"color: #d93f36;font-weight: bold\">" +
+                      data.data[3][i].transferTime.substr(0,10) +
+                      "</span> </div>\n" +
+                      "            <div class=\"layui-timeline-title\" >\n" +
+                      "              <span style=\"font-size: 14px;font-weight: bold;\">物流详情：</span >\n" +
+                      "              <span style=\"color: #999999;font-weight: bold\">" +
+                      data.data[3][i].transferDesc +
+                      "</span>\n" +
+
+                      "          </div>\n" +
+                      "        </li>"
+              );
+            }
+
+
+            //经销商信息
+            $('#shopName').text(data.data[4].shopName);
+            $('#shopPhone').text(data.data[4].shopPhone);
+            $('#shopAddress').text(data.data[4].shopProvince+data.data[4].shopCity+data.data[4].shopCounty+data.data[4].shopAddress);
+            $('#shopDesc').text(data.data[4].shopDesc);
+
+
+            //$('#beijing').text(data.msg);
+            // $('#resText').empty();   //清空resText里面的所有内容
+            // var html = '';
+            // $.each(data, function(commentIndex, comment){
+            //     html += '<div class="comment"><h6>' + comment['username']
+            //         + ':</h6><p class="para"' + comment['content']
+            //         + '</p></div>';
+            // });
+            // $('#resText').html(html);
+          }
+        });
+
+
+
+      }
+    });
+
+
+
+
+
+    const h = window.innerHeight;
+    let el = document.getElementsByClassName('bg')
+    for (let i = 0; i < el.length; i++) {
+      el[i].style.height = h + 'px'
+    }
+    window.addEventListener('resize', function () {
+      const h = window.innerHeight;
+      for (let i = 0; i < el.length; i++) {
+        el[i].style.height = h + 'px'
+      }
+    })
+  }
+  $(function () {
+    $('#next').click(function () {
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 1000);
+      return false;
+    });
+    $('#next2').click(function () {
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 1000);
+      return false;
+    });
+    $('#nav1').click(function () {
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 1000);
+      return false;
+    });
+    $('#nav2').click(function () {
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 1000);
+      return false;
+    });
+    $('#nav3').click(function () {
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 1000);
+      return false;
+    });
+    $('#nav4').click(function () {
+      $('html, body').animate({
+        scrollTop: $($.attr(this, 'href')).offset().top
+      }, 1000);
+      return false;
+    });
+  });
+  if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))) {
+    new WOW().init();
+  };
+</script>
+
+</html>

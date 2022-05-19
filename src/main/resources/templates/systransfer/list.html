@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/css/custom.form.css">
+    <script src="/js/xm-select.js"></script>
+</head>
+<body>
+<div class="panel panel-default operation" hidden>
+  <div class="panel-heading title"></div>
+<div class="layui-card-body">
+<form class="layui-form " action="" lay-filter="info" style="width: 700px;margin-top: 10px">
+      <input name="id" hidden/>
+<!--        <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">物流所属订单id</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="transferOrderId" name="transferOrderId" placeholder="请输入物流信息所属订单id" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">物流所属订单id</label>
+        <div class="layui-input-block">
+            <div id="transferOrderId" name="transferOrderId" class="xm-select-demo" ></div>
+            <input id="transferOrderId" name="transferOrderId" hidden/>
+        </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">物流描述</label>
+      <div class="layui-input-block">
+        <input type="transferDesc" name="transferDesc" placeholder="请输入物流信息描述" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+<!--        <div class="layui-form-item">-->
+<!--      <label class="layui-form-label">物流时间</label>-->
+<!--      <div class="layui-input-block">-->
+<!--        <input type="transferTime" name="transferTime" placeholder="请输入物流信息时间" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+<!--    </div>-->
+        <div class="layui-form-item">
+      <label class="layui-form-label">物流状态</label>
+        <div class="layui-input-block">
+            <select id="transferState" name="transferState" lay-filter="transferState" placeholder="请选择订单状态" required  lay-verify="required">
+                <option value="发货中">发货中</option>
+                <option value="运输中">运输中</option>
+                <option value="收货完成">收货完成</option>
+                <option value="订单结束">订单结束</option>
+            </select>
+            <!--          <input type="orderState" name="orderState" placeholder="请输入订单状态" autocomplete="off" class="layui-input">-->
+        </div>
+    </div>
+  <div class="layui-form-item">
+  <div class="layui-input-block">
+    <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
+    <button  class="layui-btn layui-btn-primary" id="btn_cancel">返回</button>
+  </div>
+</div>
+</form>
+</div>
+</div>
+
+<div class="table_div">
+  <div id="searchParam"  shiro:hasPermission="sysTransfer:list">
+    <div class="layui-form-item">
+      <div class="layui-input-inline">
+        <input type="text" id="key" class="layui-input"  autocomplete="off" placeholder="请输入物流id">
+      </div>
+
+      <div class="layui-input-inline ">
+        <button class="layui-btn" onclick="search()"  id="search">查询</button>
+        <button class="layui-btn"   id="export">导出全部</button>
+      </div>
+    </div>
+
+  </div>
+  <table class="layui-table" id="showTable" lay-filter="showTable" ></table>
+</div>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="add"  shiro:hasPermission="sysTransfer:add">添加</button>
+    <button class="layui-btn layui-btn-sm" lay-event="batchDeleted" shiro:hasPermission="sysTransfer:delete">删除</button>
+  </div>
+</script>
+<script type="text/html" id="tool">
+  <a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="sysTransfer:update">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="sysTransfer:delete">删除</a>
+</script>
+
+</body>
+</html>
+<script src="/layui/layui.all.js"></script>
+<script src="/js/core.util.js"></script>
+<script>
+  //获取token
+  var token = CoreUtil.getData("access_token");
+  //地址栏转义token中的#号
+  var tokenQuery = token.replace("#", "%23");
+  var tableIns1;
+  var table = layui.table;
+  var form = layui.form;
+  var layer = layui.layer;
+  var $ = jQuery = layui.jquery;
+  var laydate = layui.laydate;
+
+  layui.use(['table', 'layer', 'laydate'], function () {
+      init2();
+    //加载table
+    tableIns1 = table.render({
+      elem: '#showTable'
+      , contentType: 'application/json'
+      , headers: {"authorization": token}
+      , page: true //开启分页
+      , url: '/sysTransfer/listByPage' //数据接口
+      , method: 'POST'
+      , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+        return {
+          "code": res.code, //解析接口状态
+          "msg": res.msg, //解析提示文本
+          "count": CoreUtil.isEmpty(res.data) ? 0 : res.data.total, //解析数据长度
+          "data": CoreUtil.isEmpty(res.data) ? null : res.data.records //解析数据列表
+        }
+      }
+      , cols: [
+        [
+          {type: 'checkbox', fixed: 'left'},
+          {field: 'id', title: '物流id', sort: true},
+          {field: 'transferOrderId', title: '物流信息所属订单id', sort: true},
+          {field: 'transferDesc', title: '物流信息描述', sort: true},
+          {field: 'transferTime', title: '物流信息时间', sort: true},
+          {field: 'transferState', title: '物流信息状态', sort: true},
+          {width: 120, toolbar: "#tool", title: '操作'}
+        ]
+      ]
+      , toolbar: '#toolbar'
+    });
+
+
+    //表头工具
+    table.on('toolbar(showTable)', function(obj){
+      switch(obj.event){
+        case 'batchDeleted':
+          var checkStatus = table.checkStatus(obj.config.id);
+          var data = checkStatus.data;
+          if(data.length==0){
+            layer.msg("请选择要批量删除的列");
+          }else {
+            var ids = [];
+            $(data).each(function (index,item) {
+              ids.push(item.id);
+            });
+            tipDialog(ids);
+          }
+          break;
+        case 'add':
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("新增");
+          $(".operation input[name=id]").val("");
+          $(".operation input[name=transferOrderId]").val("");
+          $(".operation input[name=transferDesc]").val("");
+          $(".operation input[name=transferTime]").val("");
+          $(".operation input[name=transferState]").val("");
+          break;
+      };
+    });
+    //列操作
+    table.on('tool(showTable)',function (obj) {
+      var data = obj.data;
+      switch (obj.event) {
+        case 'del':
+          var ids=[];
+          ids.push(data.id);
+          tipDialog(ids);
+          break;
+        case 'edit':
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("编辑");
+          $(".operation input[name=id]").val(data.id);
+          $(".operation input[name=transferOrderId]").val(data.transferOrderId);
+          $(".operation input[name=transferDesc]").val(data.transferDesc);
+          $(".operation input[name=transferTime]").val(data.transferTime);
+          $(".operation input[name=transferState]").val(data.transferState);
+          break;
+      }
+    });
+
+    //导出
+    $('#export').on('click', function () {
+      //原先分页limit
+      var exportParams = {
+        limit: 10000,
+        key: $("#key").val()
+      };
+      CoreUtil.sendPost("/sysTransfer/listByPage", exportParams, function (res) {
+        //初始化渲染数据
+        if (res.data != null && res.data.records != null) {
+          table.exportFile(tableIns1.config.id, res.data.records, 'xls');
+        }
+      });
+    });
+
+    //删除
+    var tipDialog=function (ids) {
+      layer.open({
+        content: "确定要删除么?",
+        yes: function(index, layero){
+          layer.close(index); //如果设定了yes回调，需进行手工关闭
+          CoreUtil.sendDelete("/sysTransfer/delete",ids,function (res) {
+            layer.msg(res.msg, {time:1000},function () {
+              search();
+            });
+          });
+        }
+      });
+    };
+
+    //返回
+    $("#btn_cancel").click(function() {
+      $(".table_div").show();
+      $(".operation").hide();
+      return false;
+    });
+
+    //监听保存
+    form.on('submit(submit)', function(data){
+      if(data.field.id===undefined || data.field.id===null || data.field.id===""){
+        CoreUtil.sendPost("/sysTransfer/add",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+          search();
+        });
+      }else {
+        CoreUtil.sendPut("/sysTransfer/update",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+          search();
+        });
+      }
+
+      return false;
+    });
+  });
+
+  //执行查询
+  function search() {
+      //这里以搜索为例
+      tableIns1.reload({
+          url:'/sysTransfer/search?transferOrderId='+$("#key").val(),
+          where: { //设定异步数据接口的额外参数，任意设
+
+          }
+          , page: {
+              curr: 1 //重新从第 1 页开始
+          }
+      });
+  };
+  function init2(){
+      CoreUtil.sendGet("/sysTransfer/init2", null, function (res) {
+          //console.log(res);
+          var a=[];
+          for(var i in res.data){
+              a.push({name: res.data[i].id+" (经销商名称:"+res.data[i].orderReceivename+" || 订单产品:"+res.data[i].orderProductName+")", value:res.data[i].id});
+              // var a="<option value='"+res.data[i].categoryId+"'>"+res.data[i].categoryName+"</option>";
+              // console.log(a);
+              //$("#storeioId").append(new Option( res.data[i].storeioId+" (仓库名称:"+res.data[i].storeName+"  | |产品名称:"+res.data[i].storeProductName+"  | |出库数量:"+res.data[i].storeioNum+")",res.data[i].storeioId));
+          }
+          var demo2 = xmSelect.render({
+              el: '#transferOrderId',
+              radio: true,
+              toolbar: {show: true},
+              clickClose: true,
+              filterable: true,
+              data: a,
+              on: function(data){
+                  //arr:  当前多选已选中的数据
+                  var arr = data.arr;
+                  //change, 此次选择变化的数据,数组
+                  var change = data.change;
+                  //isAdd, 此次操作是新增还是删除
+                  var isAdd = data.isAdd;
+                  $(".operation input[name=transferOrderId]").val(data.arr[0].value);
+                  // alert('已有: '+arr.length+' 变化: '+change.length+', 状态: ' + isAdd)
+              }
+          });
+          //console.log(a);
+          layui.form.render("select");
+      });
+  }
+</script>

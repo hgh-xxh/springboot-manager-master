@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.project.mapper.SysProductMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.company.project.entity.SysProductEntity" id="sysProductMap">
+        <result property="productId" column="product_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="productStatus" column="product_status"/>
+        <result property="productRemark" column="product_remark"/>
+        <result property="productTaste" column="product_taste"/>
+        <result property="productStdNumber" column="product_stdNumber"/>
+        <result property="productFun" column="product_fun"/>
+        <result property="productStorage" column="product_storage"/>
+        <result property="productImage" column="product_image"/>
+    </resultMap>
+
+
+</mapper>

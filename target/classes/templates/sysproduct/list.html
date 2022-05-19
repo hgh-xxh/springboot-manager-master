@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/css/custom.form.css">
+</head>
+<body>
+<div class="panel panel-default operation" hidden>
+  <div class="panel-heading title"></div>
+<div class="layui-card-body">
+<form class="layui-form " action="" lay-filter="info" style="width: 700px;margin-top: 10px">
+      <input id="productId" name="productId" type="hidden" />
+        <div class="layui-form-item">
+      <label class="layui-form-label">分类名</label>
+            <div class="layui-input-block">
+                <select id="categoryId" name="categoryId" lay-filter="categoryId" placeholder="请选择分类名" required  lay-verify="required">
+                    <option value=""></option>
+                </select>
+            </div>
+<!--      <div class="layui-input-block">-->
+<!--        <input type="categoryName" name="categoryId" placeholder="请输入分类名" autocomplete="off" class="layui-input">-->
+<!--      </div>-->
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">产品名称</label>
+      <div class="layui-input-block">
+        <input type="productName" name="productName" placeholder="请输入产品名称" autocomplete="off" class="layui-input" required  lay-verify="required" >
+      </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单价（元/kg）</label>
+        <div class="layui-input-block">
+            <input type="productPrice" name="productPrice" placeholder="请输入单价（元/kg）" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">状态</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="checkbox" name="productStatus" lay-skin="switch" lay-filter="switch" lay-text="启用|禁用" checked>-->
+<!--            </div>-->
+<!--    </div>-->
+        <div class="layui-form-item">
+      <label class="layui-form-label">评价</label>
+      <div class="layui-input-block">
+        <input type="productRemark" name="productRemark" placeholder="请输入评价" autocomplete="off" class="layui-input" required  lay-verify="required">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">口味</label>
+      <div class="layui-input-block">
+        <input type="productTaste" name="productTaste" placeholder="请输入口味" autocomplete="off" class="layui-input" required  lay-verify="required">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">标准号</label>
+      <div class="layui-input-block">
+        <input type="productStdNumber" name="productStdNumber" placeholder="请输入标准号" autocomplete="off" class="layui-input" required  lay-verify="required">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">使用方法</label>
+      <div class="layui-input-block">
+        <input type="productFun" name="productFun" placeholder="请输入使用方法" autocomplete="off" class="layui-input" required  lay-verify="required">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">储存</label>
+      <div class="layui-input-block">
+        <input type="productStorage" name="productStorage" placeholder="请输入储存" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">产品图片</label>
+        <div class="layui-input-inline ">
+            <input  type="hidden" name="productImage" id="productImage"  autocomplete="off" class="layui-input" />
+            <img   id="image" name="image"  src=""/>
+            <button type="button" class="layui-btn" id="upload">
+                <i class="layui-icon">&#xe67c;</i>选择文件
+            </button>
+        </div>
+<!--        <input type="productImage" name="productImage" placeholder="请输入" autocomplete="off" class="layui-input">-->
+    </div>
+  <div class="layui-form-item">
+  <div class="layui-input-block">
+    <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
+    <button  class="layui-btn layui-btn-primary" id="btn_cancel">返回</button>
+  </div>
+</div>
+</form>
+</div>
+</div>
+
+<div class="table_div">
+  <div id="searchParam"  shiro:hasPermission="sysProduct:list">
+    <div class="layui-form-item">
+      <div class="layui-input-inline">
+        <input type="text" id="key" class="layui-input"  autocomplete="off" placeholder="请输入产品名称">
+      </div>
+
+      <div class="layui-input-inline ">
+        <button class="layui-btn" onclick="search()"  id="search">查询</button>
+        <button class="layui-btn"   id="export">导出全部</button>
+      </div>
+    </div>
+
+  </div>
+  <table class="layui-table" id="showTable" lay-filter="showTable" ></table>
+</div>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="add"  shiro:hasPermission="sysProduct:add">添加</button>
+    <button class="layui-btn layui-btn-sm" lay-event="batchDeleted" shiro:hasPermission="sysProduct:delete">删除</button>
+  </div>
+</script>
+<script type="text/html" id="tool">
+  <a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="sysProduct:update">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="sysProduct:delete">删除</a>
+</script>
+
+</body>
+</html>
+<script src="/layui/layui.all.js"></script>
+<script src="/js/core.util.js"></script>
+<script>
+
+  //获取token
+  var token = CoreUtil.getData("access_token");
+  //地址栏转义token中的#号
+  var tokenQuery = token.replace("#", "%23");
+  var tableIns1;
+  var table = layui.table;
+  var form = layui.form;
+  var layer = layui.layer;
+  var $ = jQuery = layui.jquery;
+  var laydate = layui.laydate;
+  var upload = layui.upload;
+  var uploadProductId=1;
+  layui.use(['table', 'layer', 'laydate', 'upload'], function () {
+
+      initCategory();
+    //加载table
+    tableIns1 = table.render({
+      elem: '#showTable'
+      , contentType: 'application/json'
+      , headers: {"authorization": token}
+      , page: true //开启分页
+      , url: '/sysProduct/listByPage' //数据接口
+      , method: 'POST'
+      , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+        return {
+          "code": res.code, //解析接口状态
+          "msg": res.msg, //解析提示文本
+          "count": CoreUtil.isEmpty(res.data) ? 0 : res.data.total, //解析数据长度
+          "data": CoreUtil.isEmpty(res.data) ? null : res.data.records //解析数据列表
+        }
+      }
+      , cols: [
+        [
+          {type: 'checkbox', fixed: 'left'},
+          {field: 'productId', title: '产品id', sort: true},
+          {field: 'productPrice', title: '单价（元/kg）', sort: true},
+          {field: 'categoryName', title: '分类名称', sort: true},
+          {field: 'productName', title: '产品名称', sort: true},
+         // {field: 'productStatus', title: '状态', sort: true},
+         //    {
+         //        field: 'productStatus', title: '状态', width: 100, templet: function (item) {
+         //            if (item.productStatus === "1") {
+         //                return '  <input type="checkbox" lay-skin="switch" lay-text="正常|禁用" checked disabled>';
+         //            }
+         //            if (item.productStatus === "2") {
+         //                return '  <input type="checkbox" lay-skin="switch" lay-text="正常|禁用" disabled>';
+         //            }
+         //        }
+         //    },
+          {field: 'productRemark', title: '产品评价', sort: true},
+          {field: 'productTaste', title: '产品口味', sort: true},
+          {field: 'productStdNumber', title: '标准号', sort: true},
+          {field: 'productFun', title: '使用方法', sort: true},
+          {field: 'productStorage', title: '储存', sort: true},
+          {field: 'productImage', title: '图片', sort: true,templet: "#img"},
+          {width: 120, toolbar: "#tool", title: '操作'}
+        ]
+      ]
+      , toolbar: '#toolbar'
+    });
+      // 文件上传
+      var uploadInst = upload.render({
+          elem: '#upload' //绑定元素
+          ,accept:'file'
+          ,url:'/sysFiles/upload?authorization='+tokenQuery//上传接口;
+          ,done: function(res){
+             // alert(uploadProductId+'jjjj' );
+              console.log(res.data.src);
+              $("#productImage").val(res.data.src);
+              $("#image").attr("src",res.data.src);
+              $("#image").show();
+              //上传完毕回调
+          }
+          ,error: function(){
+              alert(url);
+              layer.msg("请选择照片");
+              //请求异常回调
+          }
+      });
+
+    //表头工具
+    table.on('toolbar(showTable)', function(obj){
+      switch(obj.event){
+        case 'batchDeleted':
+          var checkStatus = table.checkStatus(obj.config.id);
+          var data = checkStatus.data;
+          if(data.length==0){
+            layer.msg("请选择要批量删除的列");
+          }else {
+            var ids = [];
+            $(data).each(function (index,item) {
+              ids.push(item.productId);
+            });
+            tipDialog(ids);
+          }
+          break;
+        case 'add':
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("新增");
+          $(".operation input[name=productId]").val("");
+          $(".operation input[name=categoryId]").val("");
+          $(".operation input[name=productName]").val("");
+         // $(".operation input[name=productStatus]").val("");
+            //原状态代码
+         //    $(".operation input[name=productStatus]").attr('checked', 'checked');
+         //    $(".operation input[name=productStatus]").attr('type', 'hidden').val(1);
+         //    var x = document.getElementsByClassName("layui-unselect layui-form-switch");
+         //    x[0].setAttribute("class", "layui-unselect layui-form-switch layui-form-onswitch");
+         //    var d = document.getElementsByTagName('em')[0];
+         //    d.firstChild.nodeValue = '启用';
+          $(".operation input[name=productRemark]").val("");
+          $(".operation input[name=productTaste]").val("");
+          $(".operation input[name=productStdNumber]").val("");
+          $(".operation input[name=productFun]").val("");
+          $(".operation input[name=productStorage]").val("");
+          $(".operation input[name=productImage]").val("");
+          $(".operation input[name=productPrice]").val("");
+          break;
+      };
+    });
+
+    //列操作
+    table.on('tool(showTable)',function (obj) {
+      var data = obj.data;
+      switch (obj.event) {
+        case 'del':
+          var ids=[];
+          ids.push(data.productId);
+          tipDialog(ids);
+          break;
+        case 'edit':
+            console.log(data.categoryName);
+          $(".table_div").hide();
+          $(".operation").show();
+          $(".title").html("编辑");
+          $(".operation input[name=productId]").val(data.productId);
+          $("#categoryId").val(data.categoryName);
+          $(".operation input[name=productName]").val(data.productName);
+          //$(".operation input[name=productStatus]").val(data.productStatus);
+          //   if (data.productStatus == "1") {
+          //       $(".operation input[name=productStatus]").attr('checked', 'checked');
+          //       $(".operation input[name=productStatus]").attr('type', 'hidden').val(1);
+          //       var x = document.getElementsByClassName("layui-unselect layui-form-switch");
+          //       x[0].setAttribute("class", "layui-unselect layui-form-switch layui-form-onswitch");
+          //       var d = document.getElementsByTagName('em')[0];
+          //       d.firstChild.nodeValue = '启用';
+          //   } else {
+          //       $(".operation input[name=productStatus]").attr('type', 'hidden').removeAttr("checked").val(2);
+          //       var x = document.getElementsByClassName("layui-unselect layui-form-switch");
+          //       x[0].setAttribute("class", "layui-unselect layui-form-switch");
+          //       var d = document.getElementsByTagName('em')[0];
+          //       d.firstChild.nodeValue = '禁用';
+          //   }
+          $(".operation input[name=productRemark]").val(data.productRemark);
+          $(".operation input[name=productTaste]").val(data.productTaste);
+          $(".operation input[name=productStdNumber]").val(data.productStdNumber);
+          $(".operation input[name=productFun]").val(data.productFun);
+          $(".operation input[name=productStorage]").val(data.productStorage);
+          $(".operation input[name=productImage]").val(data.productImage);
+            $(".operation input[name=productPrice]").val(data.productPrice);
+          break;
+      }
+    });
+
+    //导出
+    $('#export').on('click', function () {
+      //原先分页limit
+      var exportParams = {
+        limit: 10000,
+        key: $("#key").val()
+      };
+      CoreUtil.sendPost("/sysProduct/listByPage", exportParams, function (res) {
+        //初始化渲染数据
+        if (res.data != null && res.data.records != null) {
+          table.exportFile(tableIns1.config.id, res.data.records, 'xls');
+        }
+      });
+    });
+
+    //删除
+    var tipDialog=function (ids) {
+      layer.open({
+        content: "确定要删除么?",
+        yes: function(index, layero){
+          layer.close(index); //如果设定了yes回调，需进行手工关闭
+          CoreUtil.sendDelete("/sysProduct/delete",ids,function (res) {
+            layer.msg(res.msg, {time:1000},function () {
+              search();
+            });
+          });
+        }
+      });
+    };
+
+    //返回
+    $("#btn_cancel").click(function() {
+      $(".table_div").show();
+      $(".operation").hide();
+      return false;
+    });
+      form.on('switch(switch)', function () {
+          $(".operation input[name=productStatus]").attr('type', 'hidden').val(this.checked ? 1 : 2);
+
+      });
+    //监听保存
+    form.on('submit(submit)', function(data){
+        console.log(data);
+      if(data.field.productId===undefined || data.field.productId===null || data.field.productId===""){
+        CoreUtil.sendPost("/sysProduct/add",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+          search();
+        });
+      }else {
+        CoreUtil.sendPut("/sysProduct/update",data.field,function (res) {
+          $(".table_div").show();
+          $(".operation").hide();
+          search();
+        });
+      }
+
+      return false;
+    });
+  });
+
+  //执行查询
+  function search() {
+    //这里以搜索为例
+    tableIns1.reload({
+      where: { //设定异步数据接口的额外参数，任意设
+        key: $("#key").val()
+      }
+      , page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  };
+  <!--获取分类-->
+  function initCategory(){
+      CoreUtil.sendGet("/sysCategory/findCategoryList", null, function (res) {
+          console.log(res);
+
+          for(var i in res.data){
+              // var a="<option value='"+res.data[i].categoryId+"'>"+res.data[i].categoryName+"</option>";
+              // console.log(a);
+              $("#categoryId").append(new Option(res.data[i].categoryName, res.data[i].categoryId));
+          }
+          layui.form.render("select")
+          // loadLeftTree(res.data);
+          // loadDeptTree(res.data);
+      });
+  }
+  // 图片放大
+  //显示大图片
+  function showBigImage(e) {
+      layer.open({
+          type: 1,
+          title: false,
+          closeBtn: 0,
+          shadeClose: true, //点击阴影关闭
+          // area: [$(e).width + 'px', $(e).height + 'px'], //宽高
+          area:[600+'px',600+'px'],
+          content: "<img src=" + $(e).attr('src') + " />"
+      });
+  }
+
+
+</script>
+<script type="text/html" id="img">
+    <div><img src="{{ d.productImage }}" alt="" style="width:80px; height:80px;" onclick="showBigImage(this)"></div>
+<!--   <img src="/images/pro/test.png " style="width: 150px;width: 150px;"/>-->
+</script>
+

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>地图数据可视化</title>
+    <script src="/layui/layui.js" charset="utf-8"></script>
+    <!--可视化-->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/fonts/icomoon.css">
+
+
+    <!--结束-->
+</head>
+
+<body>
+<div class="viewport">
+    <div class="column">
+        <div class="overview panel">
+            <div class="inner">
+                <div class="item">
+                    <h4 id="orderNum">2,190</h4>
+                    <span>
+                            <i class="icon-dot" style="color: #006cff"></i>
+                            订单总数1
+                        </span>
+                </div>
+                <div class="item">
+                    <h4 id="storeNum">190</h4>
+                    <span>
+                            <i class="icon-dot" style="color: #6acca3"></i>
+                            仓库总数
+                        </span>
+                </div>
+                <div class="item">
+                    <h4 id="userNum">3,001</h4>
+                    <span>
+                            <i class="icon-dot" style="color: #6acca3"></i>
+                            员工数量
+                        </span>
+                </div>
+                <div class="item">
+                    <h4 id="productNum">108</h4>
+                    <span>
+                            <i class="icon-dot" style="color: #ed3f35"></i>
+                            产品种类
+                        </span>
+                </div>
+            </div>
+        </div>
+        <!--监控-->
+        <div class="monitor panel">
+            <div class="inner">
+                <div class="tabs">
+                    <a href="javascript:;" data-index="0" class="active">仓库数据监控</a>
+                    <!-- <a href="javascript:;" data-index="1">异常设备监控</a> -->
+                </div>
+                <div class="content" style="display: block;">
+                    <div class="head">
+                        <span class="col">仓库名称</span>
+                        <span class="col">操作时间</span>
+                        <span class="col">操作类型</span>
+                        <span class="col">数量(kg)</span>
+                    </div>
+                    <div class="marquee-view">
+                        <div class="marquee" id="storeIo">
+                            <!-- <div class="row">
+                                <span class="col">20180701</span>
+                                <span class="col">11北京市昌平西路金燕龙写字楼</span>
+                                <span class="col">1000001</span>
+                                 <span class="col">1000001</span>
+                                <span class="icon-dot"></span>
+                            </div> -->
+
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="head">
+                        <span class="col">异常时间</span>
+                        <span class="col">设备地址</span>
+                        <span class="col">异常代码</span>
+                    </div>
+                    <div class="marquee-view">
+                        <div class="marquee">
+                            <div class="row">
+                                <span class="col">20190701</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000001</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190701</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190703</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190704</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190705</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190706</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190707</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190708</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190709</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                            <div class="row">
+                                <span class="col">20190710</span>
+                                <span class="col">北京市昌平区建材城西路金燕龙写字楼</span>
+                                <span class="col">1000002</span>
+                                <span class="icon-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--点位-->
+        <div class="point panel">
+            <div class="inner">
+                <h3>点位分布统计</h3>
+                <div class="chart">
+                    <div class="pie"></div>
+                    <div class="data">
+                        <div class="item">
+                            <h4>320,11</h4>
+                            <span>
+                                    <i class="icon-dot" style="color: #ed3f35"></i>
+                                    点位总数
+                                </span>
+                        </div>
+                        <div class="item">
+                            <h4>418</h4>
+                            <span>
+                                    <i class="icon-dot" style="color: #eacf19"></i>
+                                    本月新增
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <!-- 地图 -->
+        <div class="map">
+            <h3>
+                <span class="icon-cube"></span>
+                订单发放统计
+            </h3>
+            <div class="chart">
+                <div class="geo"></div>
+            </div>
+        </div>
+        <!-- 用户 -->
+        <div class="users panel">
+            <div class="inner">
+                <h3>全国经销商总量统计</h3>
+                <div class="chart">
+                    <div class="bar"></div>
+                    <div class="data">
+                        <div class="item">
+                            <h4>28,103</h4>
+                            <span>
+                                    <i class="icon-dot" style="color: #ed3f35"></i>
+                                    销户总量
+                                </span>
+                        </div>
+                        <div class="item">
+                            <h4>11</h4>
+                            <span>
+                                    <i class="icon-dot" style="color: #eacf19"></i>
+                                    本月新增
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="order panel">
+            <div class="inner">
+                <!-- 筛选 -->
+                <div class="filter">
+                    <a href="javascript:;" data-key="day365" class="active">365天</a>
+                    <a href="javascript:;" data-key="day90">90天</a>
+                    <a href="javascript:;" data-key="day30">30天</a>
+                    <a href="javascript:;" data-key="day1">24小时</a>
+                </div>
+                <!-- 数据 -->
+                <div class="data">
+                    <div class="item">
+                        <h4>10000</h4>
+                        <span>
+                                <i class="icon-dot" style="color: #ed3f35;"></i>
+                                订单量
+                            </span>
+                    </div>
+                    <div class="item">
+                        <h4>99834</h4>
+                        <span>
+                                <i class="icon-dot" style="color: #eacf19;"></i>
+                                销售额(元)
+                            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 销售额 -->
+        <div class="sales panel">
+            <div class="inner">
+                <div class="caption">
+                    <h3>销售额统计</h3>
+                    <a href="javascript:;" class="active" data-type="year">年</a>
+                    <!-- <a href="javascript:;" data-type="quarter">季</a>
+                     <a href="javascript:;" data-type="month">月</a>
+                     <a href="javascript:;" data-type="week">周</a> -->
+                </div>
+                <div class="chart">
+                    <div class="label">单位:</div>
+                    <div class="line">元</div>
+                </div>
+            </div>
+        </div>
+        <!-- 渠道 季度 -->
+        <div class="wrap" >
+
+            <div class="quarter panel" >
+                <div class="inner">
+                    <h3 style="text-align: center;">产品销量分布</h3>
+                    <div class="data" style="text-align: center; margin-top: 10px;">
+                        <div class="item">
+                            <h4 id="percent1">    </h4>
+                            <div id="percent1Name" style="color: #1E9FFF;font-size: 14px;"></div>
+                        </div>
+                        <div class="item">
+                            <h4 id="percent2">    </h4>
+
+                            <div id="percent2Name" style="color: #1E9FFF;font-size: 14px;"></div>
+                        </div>
+                    </div>
+                    <div class="data" style="text-align: center;margin-top: 10px;">
+                        <div class="item">
+                            <h4 id="percent3">    </h4>
+                            <div id="percent3Name" style="color: #1E9FFF;font-size: 14px;"></div>
+                        </div>
+                        <div class="item">
+                            <h4 id="percent4">    </h4>
+                            <div id="percent4Name" style="color: #1E9FFF;font-size: 14px;"></div>
+                        </div>
+                        <!-- <div class="item">
+                            <h6 id="percent2">    </h6>
+                             <h6 id="percent2Name" style="color: #1E9FFF;"></h6>
+
+                        </div> -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 排行榜 -->
+        <!-- <div class="top panel">
+            <h3 style="text-align: center;">种植基地平均降雨量</h3>
+            <div id="container" style="height: 100%"></div>
+            <div class="inner">
+
+                 <div id="container" style="height: 100%"></div>
+
+            </div>
+        </div> -->
+        <div class="sales panel" style="width: 100%;height: 40%;">
+            <div class="inner" style="width: 100%;height: 100%;">
+                <h3>种植基地平均降雨量(单位：mm)</h3>
+                <div class="caption">
+
+                </div>
+                <div class="chart" style="height: 100%;width: 100%;">
+                    <div id="container" style="height: 100%;width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+
+</html>
+<script src="/js/core.util.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+<script>
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+
+    var option;
+
+    option = {
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '7月', '8月', '9月', '10月', '11月', '12月']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: [820, 1203, 1102, 1509, 1290, 1330, 1320,980,771,500,605,1200],
+                type: 'line',
+                areaStyle: {}
+            }
+        ]
+    };
+
+    if (option && typeof option === 'object') {
+        myChart.setOption(option);
+    }
+
+
+</script>
+
+<script src="/js/bigScreenjs/jquery.min.js"></script>
+<script src="/js/bigScreenjs/echarts.min.js"></script>
+<script src="/js/bigScreenjs/index.js"></script>
+<script src="/js/bigScreenjs/china.js"></script>
+<script src="/js/bigScreenjs/mymap.js"></script>
